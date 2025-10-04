@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'screens/all_players.dart';
+import 'services/storage.dart';
 
 void main() {
   runApp(const MyApp());
@@ -29,8 +31,12 @@ class MyApp extends StatelessWidget {
         // This works for code too, not just values: Most code changes can be
         // tested with just a hot reload.
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+        appBarTheme: const AppBarTheme(
+          backgroundColor: Colors.deepPurple,
+          foregroundColor: Colors.white,
+        ),
       ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
+  home: AllPlayersScreen(storage: PlayerStorage()),
     );
   }
 }
