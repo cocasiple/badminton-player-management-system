@@ -19,6 +19,7 @@ class _EditPlayerScreenState extends State<EditPlayerScreen> {
 
   late int _start;
   late int _end;
+  bool _isSliding = false;
 
   final _formKey = GlobalKey<FormState>();
 
@@ -105,14 +106,13 @@ class _EditPlayerScreenState extends State<EditPlayerScreen> {
             TextFormField(controller: _remarks, decoration: const InputDecoration(labelText: 'Remarks'), maxLines: 3),
             const SizedBox(height: 16),
             const Text('Level'),
-            SizedBox(
+                  SizedBox(
               height: 120,
               child: Column(
                 children: [
                   Expanded(
                     child: Stack(
                       children: [
-                        Positioned.fill(child: CustomPaint(painter: _EditTicksPainter(totalTicks: totalTicks))),
                         Positioned.fill(
                           child: Padding(
                             padding: const EdgeInsets.symmetric(horizontal: 8.0),
@@ -133,15 +133,53 @@ class _EditPlayerScreenState extends State<EditPlayerScreen> {
                                   }
                                 });
                               },
+                              onChangeStart: (_) => setState(() => _isSliding = true),
+                              onChangeEnd: (_) => setState(() => _isSliding = false),
                             ),
                           ),
                         ),
+                        // no floating popup; sublevel shown below while sliding
                       ],
                     ),
                   ),
                   const SizedBox(height: 8),
-                  Text('From: ${_label(_start)}'),
-                  Text('To: ${_label(_end)}'),
+
+                  // Staggered level labels (two rows) aligned with slider divisions
+                  SizedBox(
+                    height: 36,
+                    child: LayoutBuilder(builder: (context, box) {
+                      const names = [
+                        'Beginners',
+                        'Intermediate',
+                        'Level G',
+                        'Level F',
+                        'Level E',
+                        'Level D',
+                        'Open Player'
+                      ];
+                      Widget labelAt(int idx) => Expanded(
+                            child: Center(
+                              child: FittedBox(
+                                fit: BoxFit.scaleDown,
+                                child: Text(names[idx], textAlign: TextAlign.center, style: const TextStyle(fontSize: 13, color: Colors.black54)),
+                              ),
+                            ),
+                          );
+
+                      return Column(children: [
+                        Expanded(
+                          child: Row(children: List.generate(names.length, (i) => i.isEven ? labelAt(i) : const Expanded(child: SizedBox.shrink()))),
+                        ),
+                        Expanded(
+                          child: Row(children: List.generate(names.length, (i) => i.isOdd ? labelAt(i) : const Expanded(child: SizedBox.shrink()))),
+                        ),
+                      ]);
+                    }),
+                  ),
+
+                  // always show combined level/sublevel on From/To
+                  Text('From: ${_label(_start)}/${_subLabel(_start)}'),
+                  Text('To: ${_label(_end)}/${_subLabel(_end)}'),
                 ],
               ),
             ),
@@ -160,6 +198,19 @@ class _EditPlayerScreenState extends State<EditPlayerScreen> {
     final idx = (value~/3).clamp(0,names.length-1);
     return names[idx];
   }
+
+  String _groupLabel(int mid) {
+    const names = ['Beginners','Intermediate','Level G','Level F','Level E','Level D','Open Player'];
+    final level = (mid ~/ 3).clamp(0, names.length - 1);
+    final pos = mid % 3;
+    final sub = pos == 0 ? 'Weak' : (pos == 1 ? 'Mid' : 'Strong');
+    return '${names[level]} - $sub';
+  }
+
+  String _subLabel(int mid) {
+    final pos = mid % 3;
+    return pos == 0 ? 'Weak' : (pos == 1 ? 'Mid' : 'Strong');
+  }
 }
 
 class _EditTicksPainter extends CustomPainter {
@@ -168,10 +219,22 @@ class _EditTicksPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     final paint = Paint()..color = Colors.grey..strokeWidth = 1;
-    for (int i=0;i<totalTicks;i++){
-      final dx = (i/(totalTicks-1))*size.width;
-      canvas.drawLine(Offset(dx,size.height*0.35), Offset(dx,size.height*0.5), paint);
+  const ticksPerLevel = 3;
+
+    // Match RangeSlider horizontal padding (8.0) so ticks line up with the track.
+    const horizontalPadding = 8.0;
+    final paddedWidth = (size.width - horizontalPadding * 2).clamp(0.0, size.width);
+
+    for (int i = 0; i < totalTicks; i++) {
+      final dx = horizontalPadding + (i / (totalTicks - 1)) * paddedWidth;
+      final posInGroup = i % ticksPerLevel; // 0..2
+      final startY = size.height * (posInGroup == 0 ? 0.55 : (posInGroup == 1 ? 0.45 : 0.32));
+      final endY = size.height * 0.55;
+      canvas.drawLine(Offset(dx, startY), Offset(dx, endY), paint);
     }
   }
-  @override bool shouldRepaint(covariant CustomPainter old) => false;
+
+  @override
+  bool shouldRepaint(covariant CustomPainter old) => false;
 }
+// removed tick overlay painter; leaving default RangeSlider appearance

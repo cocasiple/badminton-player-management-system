@@ -64,7 +64,7 @@ class _AllPlayersScreenState extends State<AllPlayersScreen> {
       ),
       body: Column(children: [Padding(padding: const EdgeInsets.all(8.0), child: TextField(decoration: const InputDecoration(prefixIcon: Icon(Icons.search), hintText: 'Search by name or nick name'), onChanged: (v) => setState(() => _query = v))), Expanded(child: ListView.builder(itemCount: _filtered.length, itemBuilder: (c, i) {
         final p = _filtered[i];
-        return Dismissible(key: ValueKey(p.id), direction: DismissDirection.endToStart, confirmDismiss: (_) async {
+  return Dismissible(key: ValueKey(p.id), direction: DismissDirection.endToStart, confirmDismiss: (_) async {
           final ok = await showDialog<bool>(context: context, builder: (d) => AlertDialog(title: const Text('Confirm'), content: Text('Delete ${p.nickname}?'), actions: [TextButton(onPressed: () => Navigator.pop(d, false), child: const Text('Cancel')), TextButton(onPressed: () => Navigator.pop(d, true), child: const Text('Delete'))]));
           if (ok ?? false) widget.storage.remove(p.id);
           setState(() {});
@@ -75,9 +75,14 @@ class _AllPlayersScreenState extends State<AllPlayersScreen> {
   }
 
   String _levelLabel(int s, int e) {
-    // Simplified representation using start level only
-    final levels = ['Beginners','Intermediate','Level G','Level F','Level E','Level D','Open'];
-    final idx = (s ~/ 3).clamp(0, levels.length - 1);
-    return levels[idx];
+    // Return 'Level/Sublevel' for a tick value
+    String labelFor(int v) {
+      final names = ['Beginners','Intermediate','Level G','Level F','Level E','Level D','Open'];
+      final level = (v ~/ 3).clamp(0, names.length - 1);
+      final pos = v % 3;
+      final sub = pos == 0 ? 'Weak' : (pos == 1 ? 'Mid' : 'Strong');
+      return '${names[level]}/$sub';
+    }
+    return '${labelFor(s)} - ${labelFor(e)}';
   }
 }

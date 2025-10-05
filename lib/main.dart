@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'screens/all_players.dart';
 import 'services/storage.dart';
+import 'models/player.dart';
 
 void main() {
   runApp(const MyApp());
@@ -12,6 +13,24 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
+    // create an in-memory storage and seed it with sample players
+    final storage = PlayerStorage();
+    final sample = <Player>[
+      Player(id: '', nickname: 'Ace', fullName: 'Miguel Santos', contact: '09171234567', email: 'miguel.santos@example.com', address: '45 Rizal Ave, Cebu', remarks: 'Left-handed attacker', levelStart: 3, levelEnd: 8),
+      Player(id: '', nickname: 'SmashPro', fullName: 'Jonah Reyes', contact: '09179876543', email: 'jonah.reyes@example.com', address: '12 Mabini St, Davao', remarks: 'Powerful smash', levelStart: 9, levelEnd: 14),
+      Player(id: '', nickname: 'NetMaster', fullName: 'Isabella Cruz', contact: '09201239876', email: 'isabella.cruz@example.com', address: '88 Lopez Rd, Iloilo', remarks: 'Excellent net play', levelStart: 6, levelEnd: 9),
+      Player(id: '', nickname: 'Dart', fullName: 'Rafael Gomez', contact: '09172223344', email: 'rafael.gomez@example.com', address: '3 Mango Lane, Bohol', remarks: 'Quick footwork', levelStart: 0, levelEnd: 4),
+      Player(id: '', nickname: 'SpinKing', fullName: 'Carlos Rivera', contact: '09173334455', email: 'carlos.rivera@example.com', address: '7 Pine St, Quezon City', remarks: 'Great racket spin', levelStart: 12, levelEnd: 18),
+      Player(id: '', nickname: 'Runner', fullName: 'Jasmine Lee', contact: '09174445566', email: 'jasmine.lee@example.com', address: '21 Oak Blvd, Batangas', remarks: 'Endurance specialist', levelStart: 6, levelEnd: 10),
+      Player(id: '', nickname: 'Finesse', fullName: 'Aaron Lim', contact: '09175556677', email: 'aaron.lim@example.com', address: '4 Palm St, Laguna', remarks: 'Tactical player', levelStart: 9, levelEnd: 12),
+      Player(id: '', nickname: 'Shadow', fullName: 'Natalie Mendoza', contact: '09176667788', email: 'natalie.mendoza@example.com', address: '99 Bayview, Iloilo', remarks: 'Defensive specialist', levelStart: 3, levelEnd: 6),
+      Player(id: '', nickname: 'Flash', fullName: 'Eric Tan', contact: '09177778899', email: 'eric.tan@example.com', address: '56 Hill Rd, Cebu', remarks: 'Very fast reflexes', levelStart: 0, levelEnd: 3),
+      Player(id: '', nickname: 'Eagle', fullName: 'Monica Dela Cruz', contact: '09178889900', email: 'monica.delacruz@example.com', address: '10 Sunrise Ave, Manila', remarks: 'Strong overhead shots', levelStart: 15, levelEnd: 20),
+    ];
+    for (final p in sample) {
+      storage.add(p);
+    }
+
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
@@ -36,7 +55,7 @@ class MyApp extends StatelessWidget {
           foregroundColor: Colors.white,
         ),
       ),
-  home: AllPlayersScreen(storage: PlayerStorage()),
+      home: AllPlayersScreen(storage: storage),
     );
   }
 }
