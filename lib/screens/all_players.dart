@@ -43,34 +43,73 @@ class _AllPlayersScreenState extends State<AllPlayersScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('All Players'),
-        actions: [
+      appBar: AppBar(title: const Text('All Players')),
+      floatingActionButton: FloatingActionButton(
+        onPressed: _add,
+        backgroundColor: Colors.blueAccent,
+        child: const Icon(Icons.add),
+      ),
+      body: Column(
+        children: [
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 6.0),
-            child: ElevatedButton.icon(
-              onPressed: _add,
-              icon: const Icon(Icons.person_add),
-              label: const Text('Add'),
-              style: ElevatedButton.styleFrom(
-                foregroundColor: Colors.white,
-                backgroundColor: Colors.transparent,
-                elevation: 0,
-                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+            padding: const EdgeInsets.all(12.0),
+            child: TextField(
+              onChanged: (v) => setState(() => _query = v),
+              decoration: InputDecoration(
+                prefixIcon: const Icon(Icons.search),
+                hintText: 'Search by name or nick name',
+                border: OutlineInputBorder(borderRadius: BorderRadius.circular(8.0)),
+                contentPadding: const EdgeInsets.symmetric(vertical: 12.0, horizontal: 12.0),
               ),
+            ),
+          ),
+          Expanded(
+            child: ListView.separated(
+              itemCount: _filtered.length,
+              separatorBuilder: (_, __) => const Divider(height: 1),
+              itemBuilder: (c, i) {
+                final p = _filtered[i];
+                return Dismissible(
+                  key: ValueKey(p.id),
+                  direction: DismissDirection.endToStart,
+                  confirmDismiss: (_) async {
+                    final ok = await showDialog<bool>(
+                      context: context,
+                      builder: (d) => AlertDialog(
+                        title: const Text('Confirm'),
+                        content: Text('Delete ${p.nickname}?'),
+                        actions: [
+                          TextButton(onPressed: () => Navigator.pop(d, false), child: const Text('Cancel')),
+                          TextButton(onPressed: () => Navigator.pop(d, true), child: const Text('Delete')),
+                        ],
+                      ),
+                    );
+                    if (ok ?? false) widget.storage.remove(p.id);
+                    setState(() {});
+                    return ok ?? false;
+                  },
+                  background: Container(color: Colors.red, alignment: Alignment.centerRight, padding: const EdgeInsets.only(right: 20), child: const Icon(Icons.delete, color: Colors.white)),
+                  child: Card(
+                    margin: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 6.0),
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
+                    elevation: 0,
+                    child: ListTile(
+                      contentPadding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+                      leading: CircleAvatar(
+                        backgroundColor: Colors.primaries[i % Colors.primaries.length],
+                        child: Text(p.nickname.isNotEmpty ? p.nickname[0] : '?', style: const TextStyle(color: Colors.white)),
+                      ),
+                      title: Text(p.nickname, style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 16)),
+                      subtitle: Text('${p.fullName} · ${_levelLabel(p.levelStart, p.levelEnd)}', style: const TextStyle(color: Colors.black54)),
+                      onTap: () => _openEdit(p),
+                    ),
+                  ),
+                );
+              },
             ),
           ),
         ],
       ),
-      body: Column(children: [Padding(padding: const EdgeInsets.all(8.0), child: TextField(decoration: const InputDecoration(prefixIcon: Icon(Icons.search), hintText: 'Search by name or nick name'), onChanged: (v) => setState(() => _query = v))), Expanded(child: ListView.builder(itemCount: _filtered.length, itemBuilder: (c, i) {
-        final p = _filtered[i];
-  return Dismissible(key: ValueKey(p.id), direction: DismissDirection.endToStart, confirmDismiss: (_) async {
-          final ok = await showDialog<bool>(context: context, builder: (d) => AlertDialog(title: const Text('Confirm'), content: Text('Delete ${p.nickname}?'), actions: [TextButton(onPressed: () => Navigator.pop(d, false), child: const Text('Cancel')), TextButton(onPressed: () => Navigator.pop(d, true), child: const Text('Delete'))]));
-          if (ok ?? false) widget.storage.remove(p.id);
-          setState(() {});
-          return ok ?? false;
-        }, background: Container(color: Colors.red, alignment: Alignment.centerRight, padding: const EdgeInsets.only(right: 20), child: const Icon(Icons.delete, color: Colors.white)), child: ListTile(leading: CircleAvatar(child: Text(p.nickname.isNotEmpty ? p.nickname[0] : '?')), title: Text(p.nickname), subtitle: Text('${p.fullName} · ${_levelLabel(p.levelStart, p.levelEnd)}'), onTap: () => _openEdit(p)));
-      }))]),
     );
   }
 
