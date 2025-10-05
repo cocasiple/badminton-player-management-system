@@ -57,7 +57,7 @@ class _AllPlayersScreenState extends State<AllPlayersScreen> {
               onChanged: (v) => setState(() => _query = v),
               decoration: InputDecoration(
                 prefixIcon: const Icon(Icons.search),
-                hintText: 'Search by name or nick name',
+                hintText: 'Search by name or nickname',
                 border: OutlineInputBorder(borderRadius: BorderRadius.circular(8.0)),
                 contentPadding: const EdgeInsets.symmetric(vertical: 12.0, horizontal: 12.0),
               ),
