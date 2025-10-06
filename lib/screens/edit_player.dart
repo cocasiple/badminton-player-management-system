@@ -50,7 +50,8 @@ class _EditPlayerScreenState extends State<EditPlayerScreen> {
 
   void _update() {
     if (_formKey.currentState?.validate() ?? false) {
-      final updated = widget.player.copyWith(
+      final updated = Player(
+        id: widget.player.id,
         nickname: _nick.text.trim(),
         fullName: _full.text.trim(),
         contact: _contact.text.trim(),
@@ -67,12 +68,18 @@ class _EditPlayerScreenState extends State<EditPlayerScreen> {
   void _delete() async {
     final result = await showDialog<bool>(
       context: context,
-      builder: (c) => AlertDialog(
+      builder: (context) => AlertDialog(
         title: const Text('Delete'),
         content: Text('Delete ${widget.player.nickname}?'),
         actions: [
-          TextButton(onPressed: () => Navigator.pop(c, false), child: const Text('Cancel')),
-          TextButton(onPressed: () => Navigator.pop(c, true), child: const Text('Delete')),
+          TextButton(
+            onPressed: () => Navigator.pop(context, false),
+            child: const Text('Cancel'),
+          ),
+          TextButton(
+            onPressed: () => Navigator.pop(context, true),
+            child: const Text('Delete'),
+          ),
         ],
       ),
     );
@@ -87,26 +94,105 @@ class _EditPlayerScreenState extends State<EditPlayerScreen> {
   Widget build(BuildContext context) {
     const totalTicks = 21;
     return Scaffold(
-      appBar: AppBar(title: const Text('Edit Player')),
+      backgroundColor: Colors.grey[50],
+      appBar: AppBar(
+        backgroundColor: Colors.blue,
+        elevation: 0,
+        titleSpacing: 0,
+        toolbarHeight: 48,
+        automaticallyImplyLeading: false,
+        flexibleSpace: Container(
+          padding: const EdgeInsets.only(top: 16),
+          child: Row(
+            children: [
+              IconButton(
+                icon: const Icon(Icons.arrow_back, color: Colors.white),
+                onPressed: () => Navigator.pop(context),
+              ),
+              const Expanded(
+                child: Text(
+                  'Edit Player',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 20,
+                    fontWeight: FontWeight.w600,
+                    letterSpacing: 0.5,
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
       body: SingleChildScrollView(
-        padding: const EdgeInsets.all(12),
-        child: Form(
-          key: _formKey,
-          child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
-            TextFormField(controller: _nick, decoration: const InputDecoration(labelText: 'Nickname *'), validator: (v) => (v == null || v.trim().isEmpty) ? 'Required' : null),
-            const SizedBox(height: 8),
-            TextFormField(controller: _full, decoration: const InputDecoration(labelText: 'Full Name *'), validator: (v) => (v == null || v.trim().isEmpty) ? 'Required' : null),
-            const SizedBox(height: 8),
-            TextFormField(controller: _contact, decoration: const InputDecoration(labelText: 'Contact Number *'), keyboardType: TextInputType.phone, validator: (v) { if (v==null||v.trim().isEmpty) return 'Required'; return RegExp(r'^\d+').hasMatch(v.trim())?null:'Numbers only'; }),
-            const SizedBox(height: 8),
-            TextFormField(controller: _email, decoration: const InputDecoration(labelText: 'Email *'), keyboardType: TextInputType.emailAddress, validator: (v) { if (v==null||v.trim().isEmpty) return 'Required'; return RegExp(r"^[^@\s]+@[^@\s]+\.[^@\s]+$").hasMatch(v.trim())?null:'Invalid email'; }),
-            const SizedBox(height: 8),
-            TextFormField(controller: _address, decoration: const InputDecoration(labelText: 'Address'), maxLines: 3),
-            const SizedBox(height: 8),
-            TextFormField(controller: _remarks, decoration: const InputDecoration(labelText: 'Remarks'), maxLines: 3),
-            const SizedBox(height: 16),
-            const Text('Level'),
-                  SizedBox(
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Form(
+            key: _formKey,
+            child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
+              _buildInputField(
+                controller: _nick,
+                label: 'NICKNAME',
+                icon: Icons.person,
+                validator: (v) => (v == null || v.trim().isEmpty) ? 'Required' : null,
+              ),
+              const SizedBox(height: 16),
+              _buildInputField(
+                controller: _full,
+                label: 'FULL NAME',
+                icon: Icons.person,
+                validator: (v) => (v == null || v.trim().isEmpty) ? 'Required' : null,
+              ),
+              const SizedBox(height: 16),
+              _buildInputField(
+                controller: _contact,
+                label: 'MOBILE NUMBER',
+                icon: Icons.phone,
+                keyboardType: TextInputType.phone,
+                validator: (v) { 
+                  if (v==null||v.trim().isEmpty) return 'Required'; 
+                  return RegExp(r'^\d+').hasMatch(v.trim())?null:'Numbers only'; 
+                },
+              ),
+              const SizedBox(height: 16),
+              _buildInputField(
+                controller: _email,
+                label: 'EMAIL ADDRESS',
+                icon: Icons.email,
+                keyboardType: TextInputType.emailAddress,
+                validator: (v) { 
+                  if (v==null||v.trim().isEmpty) return 'Required'; 
+                  return RegExp(r"^[^@\s]+@[^@\s]+\.[^@\s]+$").hasMatch(v.trim())?null:'Invalid email'; 
+                },
+              ),
+              const SizedBox(height: 16),
+              _buildInputField(
+                controller: _address,
+                label: 'HOME ADDRESS',
+                icon: Icons.location_on,
+                maxLines: null,
+              ),
+              const SizedBox(height: 16),
+              _buildInputField(
+                controller: _remarks,
+                label: 'REMARKS',
+                icon: Icons.book,
+                maxLines: null,
+              ),
+              const SizedBox(height: 20),
+              const Padding(
+                padding: EdgeInsets.only(left: 4, bottom: 8),
+                child: Text(
+                  'LEVEL',
+                  style: TextStyle(
+                    fontSize: 12,
+                    color: Colors.grey,
+                    fontWeight: FontWeight.w600,
+                    letterSpacing: 1.0,
+                  ),
+                ),
+              ),
+              SizedBox(
               height: 120,
               child: Column(
                 children: [
@@ -122,6 +208,8 @@ class _EditPlayerScreenState extends State<EditPlayerScreen> {
                               max: (totalTicks - 1).toDouble(),
                               divisions: totalTicks - 1,
                               labels: RangeLabels(_label(_start), _label(_end)),
+                              activeColor: Colors.blue,
+                              inactiveColor: Colors.blue.withOpacity(0.3),
                               onChanged: (r) {
                                 setState(() {
                                   _start = r.start.round();
@@ -187,11 +275,13 @@ class _EditPlayerScreenState extends State<EditPlayerScreen> {
             Row(children: [Expanded(child: OutlinedButton(onPressed: () => Navigator.pop(context), child: const Text('Cancel'))), const SizedBox(width: 12), Expanded(child: ElevatedButton(onPressed: _update, child: const Text('Update')))]),
             const SizedBox(height: 12),
             ElevatedButton(style: ElevatedButton.styleFrom(backgroundColor: Colors.red), onPressed: _delete, child: const Text('Delete'))
-          ]),
+            ]),
+          ),
         ),
       ),
     );
   }
+
 
   String _label(int value){
     const names = ['Beginners','Intermediate','Level G','Level F','Level E','Level D','Open Player'];
@@ -210,6 +300,72 @@ class _EditPlayerScreenState extends State<EditPlayerScreen> {
   String _subLabel(int mid) {
     final pos = mid % 3;
     return pos == 0 ? 'Weak' : (pos == 1 ? 'Mid' : 'Strong');
+  }
+
+  Widget _buildInputField({
+    required TextEditingController controller,
+    required String label,
+    required IconData icon,
+    String? Function(String?)? validator,
+    TextInputType? keyboardType,
+    int? maxLines = 1,
+  }) {
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(8),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.grey.withOpacity(0.1),
+            spreadRadius: 1,
+            blurRadius: 3,
+            offset: const Offset(0, 1),
+          ),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Padding(
+            padding: const EdgeInsets.only(left: 16, top: 12, right: 16),
+            child: Text(
+              label,
+              style: const TextStyle(
+                fontSize: 12,
+                color: Colors.grey,
+                fontWeight: FontWeight.w600,
+                letterSpacing: 1.0,
+                fontFamily: 'Roboto',
+              ),
+            ),
+          ),
+          TextFormField(
+            controller: controller,
+            validator: validator,
+            keyboardType: keyboardType,
+            maxLines: maxLines,
+            minLines: 1,
+            style: const TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.w500,
+              letterSpacing: 0.3,
+              fontFamily: 'Roboto',
+              height: 1.4,
+            ),
+            decoration: InputDecoration(
+              prefixIcon: Icon(
+                icon,
+                color: Colors.blue,
+                size: 20,
+              ),
+              border: InputBorder.none,
+              contentPadding: const EdgeInsets.only(left: 56, right: 16, bottom: 16, top: 8),
+              hintStyle: const TextStyle(color: Colors.grey),
+            ),
+          ),
+        ],
+      ),
+    );
   }
 }
 

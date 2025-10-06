@@ -43,7 +43,28 @@ class _AllPlayersScreenState extends State<AllPlayersScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('All Players')),
+      backgroundColor: Colors.grey[50],
+      appBar: AppBar(
+        backgroundColor: Colors.blue,
+        elevation: 0,
+        titleSpacing: 0,
+        toolbarHeight: 48,
+        automaticallyImplyLeading: false,
+        flexibleSpace: Container(
+          padding: const EdgeInsets.only(top: 16),
+          child: const Center(
+            child: Text(
+              'All Players',
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 20,
+                fontWeight: FontWeight.w600,
+                letterSpacing: 0.5,
+              ),
+            ),
+          ),
+        ),
+      ),
       floatingActionButton: FloatingActionButton(
         onPressed: _add,
         backgroundColor: Colors.blueAccent,
@@ -52,14 +73,28 @@ class _AllPlayersScreenState extends State<AllPlayersScreen> {
       body: Column(
         children: [
           Padding(
-            padding: const EdgeInsets.all(12.0),
+            padding: const EdgeInsets.all(16.0),
             child: TextField(
               onChanged: (v) => setState(() => _query = v),
+              style: const TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.w500,
+                letterSpacing: 0.5,
+              ),
               decoration: InputDecoration(
-                prefixIcon: const Icon(Icons.search),
+                prefixIcon: const Icon(Icons.search, color: Colors.blue),
                 hintText: 'Search by name or nickname',
-                border: OutlineInputBorder(borderRadius: BorderRadius.circular(8.0)),
-                contentPadding: const EdgeInsets.symmetric(vertical: 12.0, horizontal: 12.0),
+                hintStyle: const TextStyle(
+                  color: Colors.grey,
+                  fontWeight: FontWeight.w400,
+                ),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12.0),
+                  borderSide: BorderSide.none,
+                ),
+                filled: true,
+                fillColor: Colors.white,
+                contentPadding: const EdgeInsets.symmetric(vertical: 16.0, horizontal: 16.0),
               ),
             ),
           ),
@@ -97,10 +132,31 @@ class _AllPlayersScreenState extends State<AllPlayersScreen> {
                       contentPadding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
                       leading: CircleAvatar(
                         backgroundColor: Colors.primaries[i % Colors.primaries.length],
-                        child: Text(p.nickname.isNotEmpty ? p.nickname[0] : '?', style: const TextStyle(color: Colors.white)),
+                        child: Text(
+                          p.nickname.isNotEmpty ? p.nickname[0] : '?', 
+                          style: const TextStyle(
+                            color: Colors.white, 
+                            fontWeight: FontWeight.w600,
+                            fontSize: 16,
+                          )
+                        ),
                       ),
-                      title: Text(p.nickname, style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 16)),
-                      subtitle: Text('${p.fullName} · ${_levelLabel(p.levelStart, p.levelEnd)}', style: const TextStyle(color: Colors.black54)),
+                      title: Text(
+                        p.nickname, 
+                        style: const TextStyle(
+                          fontWeight: FontWeight.w600, 
+                          fontSize: 18,
+                          letterSpacing: 0.5,
+                        )
+                      ),
+                      subtitle: Text(
+                        '${p.fullName} · ${_levelLabel(p.levelStart, p.levelEnd)}', 
+                        style: const TextStyle(
+                          color: Colors.black54,
+                          fontWeight: FontWeight.w400,
+                          fontSize: 14,
+                        )
+                      ),
                       onTap: () => _openEdit(p),
                     ),
                   ),
