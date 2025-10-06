@@ -57,29 +57,18 @@ class _AddPlayerScreenState extends State<AddPlayerScreen> {
       appBar: AppBar(
         backgroundColor: Colors.blue,
         elevation: 0,
-        titleSpacing: 0,
-        toolbarHeight: 48,
-        automaticallyImplyLeading: false,
-        flexibleSpace: Container(
-          padding: const EdgeInsets.only(top: 16),
-          child: Row(
-            children: [
-              IconButton(
-                icon: const Icon(Icons.arrow_back, color: Colors.white),
-                onPressed: () => Navigator.pop(context),
-              ),
-              const Expanded(
-                child: Text(
-                  'Add New Player',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 20,
-                    fontWeight: FontWeight.w600,
-                    letterSpacing: 0.5,
-                  ),
-                ),
-              ),
-            ],
+        centerTitle: true,
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back, color: Colors.white),
+          onPressed: () => Navigator.pop(context),
+        ),
+        title: const Text(
+          'Add New Player',
+          style: TextStyle(
+            color: Colors.white,
+            fontSize: 20,
+            fontWeight: FontWeight.w600,
+            letterSpacing: 0.5,
           ),
         ),
       ),
@@ -95,14 +84,16 @@ class _AddPlayerScreenState extends State<AddPlayerScreen> {
                   controller: _nick,
                   label: 'NICKNAME',
                   icon: Icons.person,
-                  validator: (v) => (v == null || v.trim().isEmpty) ? 'Required' : null,
+                  validator: (v) =>
+                      (v == null || v.trim().isEmpty) ? 'Required' : null,
                 ),
                 const SizedBox(height: 16),
                 _buildInputField(
                   controller: _full,
                   label: 'FULL NAME',
                   icon: Icons.person,
-                  validator: (v) => (v == null || v.trim().isEmpty) ? 'Required' : null,
+                  validator: (v) =>
+                      (v == null || v.trim().isEmpty) ? 'Required' : null,
                 ),
                 const SizedBox(height: 16),
                 _buildInputField(
@@ -112,7 +103,9 @@ class _AddPlayerScreenState extends State<AddPlayerScreen> {
                   keyboardType: TextInputType.phone,
                   validator: (v) {
                     if (v == null || v.trim().isEmpty) return 'Required';
-                    return RegExp(r'^\d+').hasMatch(v.trim()) ? null : 'Numbers only';
+                    return RegExp(r'^\d+').hasMatch(v.trim())
+                        ? null
+                        : 'Numbers only';
                   },
                 ),
                 const SizedBox(height: 16),
@@ -123,7 +116,11 @@ class _AddPlayerScreenState extends State<AddPlayerScreen> {
                   keyboardType: TextInputType.emailAddress,
                   validator: (v) {
                     if (v == null || v.trim().isEmpty) return 'Required';
-                    return RegExp(r"^[^@\s]+@[^@\s]+\.[^@\s]+$").hasMatch(v.trim()) ? null : 'Invalid email';
+                    return RegExp(
+                          r"^[^@\s]+@[^@\s]+\.[^@\s]+$",
+                        ).hasMatch(v.trim())
+                        ? null
+                        : 'Invalid email';
                   },
                 ),
                 const SizedBox(height: 16),
@@ -157,18 +154,67 @@ class _AddPlayerScreenState extends State<AddPlayerScreen> {
                   height: 120,
                   child: Column(
                     children: [
+                      // Top staggered level labels (first row)
+                      SizedBox(
+                        height: 18,
+                        child: LayoutBuilder(
+                          builder: (context, box) {
+                            const names = [
+                              'Beginners',
+                              'Intermediate',
+                              'Level G',
+                              'Level F',
+                              'Level E',
+                              'Level D',
+                              'Open Player',
+                            ];
+                            Widget labelAt(int idx) => Expanded(
+                              child: Center(
+                                child: Text(
+                                  names[idx],
+                                  textAlign: TextAlign.center,
+                                  style: const TextStyle(
+                                    fontSize: 11,
+                                    color: Colors.black54,
+                                  ),
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                              ),
+                            );
+
+                            return Row(
+                              children: List.generate(
+                                names.length,
+                                (i) => i.isEven
+                                    ? labelAt(i)
+                                    : const Expanded(child: SizedBox.shrink()),
+                              ),
+                            );
+                          },
+                        ),
+                      ),
+                      const SizedBox(height: 2),
+                      // RangeSlider in the middle
                       Expanded(
                         child: Stack(
                           children: [
                             Positioned.fill(
                               child: Padding(
-                                padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 8.0,
+                                ),
                                 child: RangeSlider(
-                                  values: RangeValues(_start.toDouble(), _end.toDouble()),
+                                  values: RangeValues(
+                                    _start.toDouble(),
+                                    _end.toDouble(),
+                                  ),
                                   min: 0,
                                   max: (totalTicks - 1).toDouble(),
                                   divisions: totalTicks - 1,
-                                  labels: RangeLabels(_label(_start), _label(_end)),
+                                  labels: RangeLabels(
+                                    _label(_start),
+                                    _label(_end),
+                                  ),
                                   activeColor: Colors.blue,
                                   inactiveColor: Colors.blue.withOpacity(0.3),
                                   onChanged: (r) {
@@ -182,61 +228,81 @@ class _AddPlayerScreenState extends State<AddPlayerScreen> {
                                       }
                                     });
                                   },
-                                  onChangeStart: (_) => setState(() => _isSliding = true),
-                                  onChangeEnd: (_) => setState(() => _isSliding = false),
+                                  onChangeStart: (_) =>
+                                      setState(() => _isSliding = true),
+                                  onChangeEnd: (_) =>
+                                      setState(() => _isSliding = false),
                                 ),
                               ),
                             ),
                           ],
                         ),
                       ),
-                      const SizedBox(height: 8),
-                      // Staggered level labels (two rows) aligned with slider divisions
+                      const SizedBox(height: 2),
+                      // Bottom staggered level labels (second row)
                       SizedBox(
-                        height: 36,
-                        child: LayoutBuilder(builder: (context, box) {
-                          const names = [
-                            'Beginners',
-                            'Intermediate',
-                            'Level G',
-                            'Level F',
-                            'Level E',
-                            'Level D',
-                            'Open Player'
-                          ];
-                          Widget labelAt(int idx) => Expanded(
-                                child: Center(
-                                  child: FittedBox(
-                                    fit: BoxFit.scaleDown,
-                                    child: Text(names[idx], textAlign: TextAlign.center, style: const TextStyle(fontSize: 13, color: Colors.black54)),
+                        height: 18,
+                        child: LayoutBuilder(
+                          builder: (context, box) {
+                            const names = [
+                              'Beginners',
+                              'Intermediate',
+                              'Level G',
+                              'Level F',
+                              'Level E',
+                              'Level D',
+                              'Open Player',
+                            ];
+                            Widget labelAt(int idx) => Expanded(
+                              child: Center(
+                                child: Text(
+                                  names[idx],
+                                  textAlign: TextAlign.center,
+                                  style: const TextStyle(
+                                    fontSize: 11,
+                                    color: Colors.black54,
                                   ),
+                                  overflow: TextOverflow.ellipsis,
                                 ),
-                              );
+                              ),
+                            );
 
-                          return Column(children: [
-                            Expanded(
-                              child: Row(children: List.generate(names.length, (i) => i.isEven ? labelAt(i) : const Expanded(child: SizedBox.shrink()))),
-                            ),
-                            Expanded(
-                              child: Row(children: List.generate(names.length, (i) => i.isOdd ? labelAt(i) : const Expanded(child: SizedBox.shrink()))),
-                            ),
-                          ]);
-                        }),
+                            return Row(
+                              children: List.generate(
+                                names.length,
+                                (i) => i.isOdd
+                                    ? labelAt(i)
+                                    : const Expanded(child: SizedBox.shrink()),
+                              ),
+                            );
+                          },
+                        ),
                       ),
                       // always show combined level/sublevel on From/To
-                      Text('From: ${_label(_start)}/${_subLabel(_start)}'),
-                      Text('To: ${_label(_end)}/${_subLabel(_end)}'),
+                      Text(
+                        'From: ${_label(_start)}/${_subLabel(_start)} • To: ${_label(_end)}/${_subLabel(_end)}',
+                      ),
                     ],
                   ),
                 ),
                 const SizedBox(height: 12),
                 Row(
                   children: [
-                    Expanded(child: OutlinedButton(onPressed: () => Navigator.pop(context), child: const Text('Cancel'))),
+                    Expanded(
+                      child: OutlinedButton(
+                        onPressed: () => Navigator.pop(context),
+                        child: const Text('Cancel'),
+                      ),
+                    ),
                     const SizedBox(width: 12),
-                    Expanded(child: ElevatedButton(onPressed: _save, child: const Text('Save Player'))),
+                    Expanded(
+                      child: ElevatedButton(
+                        onPressed: _save,
+                        child: const Text('Save Player'),
+                      ),
+                    ),
                   ],
-                )
+                ),
               ],
             ),
           ),
@@ -246,17 +312,17 @@ class _AddPlayerScreenState extends State<AddPlayerScreen> {
   }
 
   String _label(int value) {
-    const names = ['Beginners', 'Intermediate', 'Level G', 'Level F', 'Level E', 'Level D', 'Open Player'];
+    const names = [
+      'Beginners',
+      'Intermediate',
+      'Level G',
+      'Level F',
+      'Level E',
+      'Level D',
+      'Open Player',
+    ];
     final idx = (value ~/ 3).clamp(0, names.length - 1);
     return names[idx];
-  }
-
-  String _groupLabel(int mid) {
-    const names = ['Beginners', 'Intermediate', 'Level G', 'Level F', 'Level E', 'Level D', 'Open Player'];
-    final level = (mid ~/ 3).clamp(0, names.length - 1);
-    final pos = mid % 3;
-    final sub = pos == 0 ? 'Weak' : (pos == 1 ? 'Mid' : 'Strong');
-    return '${names[level]} - $sub';
   }
 
   String _subLabel(int mid) {
@@ -315,13 +381,14 @@ class _AddPlayerScreenState extends State<AddPlayerScreen> {
               height: 1.4,
             ),
             decoration: InputDecoration(
-              prefixIcon: Icon(
-                icon,
-                color: Colors.blue,
-                size: 20,
-              ),
+              prefixIcon: Icon(icon, color: Colors.blue, size: 20),
               border: InputBorder.none,
-              contentPadding: const EdgeInsets.only(left: 56, right: 16, bottom: 16, top: 8),
+              contentPadding: const EdgeInsets.only(
+                left: 56,
+                right: 16,
+                bottom: 16,
+                top: 8,
+              ),
               hintStyle: const TextStyle(color: Colors.grey),
             ),
           ),

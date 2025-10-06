@@ -98,29 +98,18 @@ class _EditPlayerScreenState extends State<EditPlayerScreen> {
       appBar: AppBar(
         backgroundColor: Colors.blue,
         elevation: 0,
-        titleSpacing: 0,
-        toolbarHeight: 48,
-        automaticallyImplyLeading: false,
-        flexibleSpace: Container(
-          padding: const EdgeInsets.only(top: 16),
-          child: Row(
-            children: [
-              IconButton(
-                icon: const Icon(Icons.arrow_back, color: Colors.white),
-                onPressed: () => Navigator.pop(context),
-              ),
-              const Expanded(
-                child: Text(
-                  'Edit Player',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 20,
-                    fontWeight: FontWeight.w600,
-                    letterSpacing: 0.5,
-                  ),
-                ),
-              ),
-            ],
+        centerTitle: true,
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back, color: Colors.white),
+          onPressed: () => Navigator.pop(context),
+        ),
+        title: const Text(
+          'Edit Player',
+          style: TextStyle(
+            color: Colors.white,
+            fontSize: 20,
+            fontWeight: FontWeight.w600,
+            letterSpacing: 0.5,
           ),
         ),
       ),
@@ -129,172 +118,259 @@ class _EditPlayerScreenState extends State<EditPlayerScreen> {
           padding: const EdgeInsets.all(16.0),
           child: Form(
             key: _formKey,
-            child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
-              _buildInputField(
-                controller: _nick,
-                label: 'NICKNAME',
-                icon: Icons.person,
-                validator: (v) => (v == null || v.trim().isEmpty) ? 'Required' : null,
-              ),
-              const SizedBox(height: 16),
-              _buildInputField(
-                controller: _full,
-                label: 'FULL NAME',
-                icon: Icons.person,
-                validator: (v) => (v == null || v.trim().isEmpty) ? 'Required' : null,
-              ),
-              const SizedBox(height: 16),
-              _buildInputField(
-                controller: _contact,
-                label: 'MOBILE NUMBER',
-                icon: Icons.phone,
-                keyboardType: TextInputType.phone,
-                validator: (v) { 
-                  if (v==null||v.trim().isEmpty) return 'Required'; 
-                  return RegExp(r'^\d+').hasMatch(v.trim())?null:'Numbers only'; 
-                },
-              ),
-              const SizedBox(height: 16),
-              _buildInputField(
-                controller: _email,
-                label: 'EMAIL ADDRESS',
-                icon: Icons.email,
-                keyboardType: TextInputType.emailAddress,
-                validator: (v) { 
-                  if (v==null||v.trim().isEmpty) return 'Required'; 
-                  return RegExp(r"^[^@\s]+@[^@\s]+\.[^@\s]+$").hasMatch(v.trim())?null:'Invalid email'; 
-                },
-              ),
-              const SizedBox(height: 16),
-              _buildInputField(
-                controller: _address,
-                label: 'HOME ADDRESS',
-                icon: Icons.location_on,
-                maxLines: null,
-              ),
-              const SizedBox(height: 16),
-              _buildInputField(
-                controller: _remarks,
-                label: 'REMARKS',
-                icon: Icons.book,
-                maxLines: null,
-              ),
-              const SizedBox(height: 20),
-              const Padding(
-                padding: EdgeInsets.only(left: 4, bottom: 8),
-                child: Text(
-                  'LEVEL',
-                  style: TextStyle(
-                    fontSize: 12,
-                    color: Colors.grey,
-                    fontWeight: FontWeight.w600,
-                    letterSpacing: 1.0,
-                  ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                _buildInputField(
+                  controller: _nick,
+                  label: 'NICKNAME',
+                  icon: Icons.person,
+                  validator: (v) =>
+                      (v == null || v.trim().isEmpty) ? 'Required' : null,
                 ),
-              ),
-              SizedBox(
-              height: 120,
-              child: Column(
-                children: [
-                  Expanded(
-                    child: Stack(
-                      children: [
-                        Positioned.fill(
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                            child: RangeSlider(
-                              values: RangeValues(_start.toDouble(), _end.toDouble()),
-                              min: 0,
-                              max: (totalTicks - 1).toDouble(),
-                              divisions: totalTicks - 1,
-                              labels: RangeLabels(_label(_start), _label(_end)),
-                              activeColor: Colors.blue,
-                              inactiveColor: Colors.blue.withOpacity(0.3),
-                              onChanged: (r) {
-                                setState(() {
-                                  _start = r.start.round();
-                                  _end = r.end.round();
-                                  if (_start > _end) {
-                                    final t = _start;
-                                    _start = _end;
-                                    _end = t;
-                                  }
-                                });
-                              },
-                              onChangeStart: (_) => setState(() => _isSliding = true),
-                              onChangeEnd: (_) => setState(() => _isSliding = false),
-                            ),
-                          ),
-                        ),
-                        // no floating popup; sublevel shown below while sliding
-                      ],
+                const SizedBox(height: 16),
+                _buildInputField(
+                  controller: _full,
+                  label: 'FULL NAME',
+                  icon: Icons.person,
+                  validator: (v) =>
+                      (v == null || v.trim().isEmpty) ? 'Required' : null,
+                ),
+                const SizedBox(height: 16),
+                _buildInputField(
+                  controller: _contact,
+                  label: 'MOBILE NUMBER',
+                  icon: Icons.phone,
+                  keyboardType: TextInputType.phone,
+                  validator: (v) {
+                    if (v == null || v.trim().isEmpty) return 'Required';
+                    return RegExp(r'^\d+').hasMatch(v.trim())
+                        ? null
+                        : 'Numbers only';
+                  },
+                ),
+                const SizedBox(height: 16),
+                _buildInputField(
+                  controller: _email,
+                  label: 'EMAIL ADDRESS',
+                  icon: Icons.email,
+                  keyboardType: TextInputType.emailAddress,
+                  validator: (v) {
+                    if (v == null || v.trim().isEmpty) return 'Required';
+                    return RegExp(
+                          r"^[^@\s]+@[^@\s]+\.[^@\s]+$",
+                        ).hasMatch(v.trim())
+                        ? null
+                        : 'Invalid email';
+                  },
+                ),
+                const SizedBox(height: 16),
+                _buildInputField(
+                  controller: _address,
+                  label: 'HOME ADDRESS',
+                  icon: Icons.location_on,
+                  maxLines: null,
+                ),
+                const SizedBox(height: 16),
+                _buildInputField(
+                  controller: _remarks,
+                  label: 'REMARKS',
+                  icon: Icons.book,
+                  maxLines: null,
+                ),
+                const SizedBox(height: 20),
+                const Padding(
+                  padding: EdgeInsets.only(left: 4, bottom: 8),
+                  child: Text(
+                    'LEVEL',
+                    style: TextStyle(
+                      fontSize: 12,
+                      color: Colors.grey,
+                      fontWeight: FontWeight.w600,
+                      letterSpacing: 1.0,
                     ),
                   ),
-                  const SizedBox(height: 8),
+                ),
+                SizedBox(
+                  height: 120,
+                  child: Column(
+                    children: [
+                      // Top staggered level labels (first row)
+                      SizedBox(
+                        height: 18,
+                        child: LayoutBuilder(
+                          builder: (context, box) {
+                            const names = [
+                              'Beginners',
+                              'Intermediate',
+                              'Level G',
+                              'Level F',
+                              'Level E',
+                              'Level D',
+                              'Open Player',
+                            ];
+                            Widget labelAt(int idx) => Expanded(
+                              child: Center(
+                                child: Text(
+                                  names[idx],
+                                  textAlign: TextAlign.center,
+                                  style: const TextStyle(
+                                    fontSize: 11,
+                                    color: Colors.black54,
+                                  ),
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                              ),
+                            );
 
-                  // Staggered level labels (two rows) aligned with slider divisions
-                  SizedBox(
-                    height: 36,
-                    child: LayoutBuilder(builder: (context, box) {
-                      const names = [
-                        'Beginners',
-                        'Intermediate',
-                        'Level G',
-                        'Level F',
-                        'Level E',
-                        'Level D',
-                        'Open Player'
-                      ];
-                      Widget labelAt(int idx) => Expanded(
-                            child: Center(
-                              child: FittedBox(
-                                fit: BoxFit.scaleDown,
-                                child: Text(names[idx], textAlign: TextAlign.center, style: const TextStyle(fontSize: 13, color: Colors.black54)),
+                            return Row(
+                              children: List.generate(
+                                names.length,
+                                (i) => i.isEven
+                                    ? labelAt(i)
+                                    : const Expanded(child: SizedBox.shrink()),
+                              ),
+                            );
+                          },
+                        ),
+                      ),
+                      const SizedBox(height: 2),
+                      // RangeSlider in the middle
+                      Expanded(
+                        child: Stack(
+                          children: [
+                            Positioned.fill(
+                              child: Padding(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 8.0,
+                                ),
+                                child: RangeSlider(
+                                  values: RangeValues(
+                                    _start.toDouble(),
+                                    _end.toDouble(),
+                                  ),
+                                  min: 0,
+                                  max: (totalTicks - 1).toDouble(),
+                                  divisions: totalTicks - 1,
+                                  labels: RangeLabels(
+                                    _label(_start),
+                                    _label(_end),
+                                  ),
+                                  activeColor: Colors.blue,
+                                  inactiveColor: Colors.blue.withOpacity(0.3),
+                                  onChanged: (r) {
+                                    setState(() {
+                                      _start = r.start.round();
+                                      _end = r.end.round();
+                                      if (_start > _end) {
+                                        final t = _start;
+                                        _start = _end;
+                                        _end = t;
+                                      }
+                                    });
+                                  },
+                                  onChangeStart: (_) =>
+                                      setState(() => _isSliding = true),
+                                  onChangeEnd: (_) =>
+                                      setState(() => _isSliding = false),
+                                ),
                               ),
                             ),
-                          );
+                            // no floating popup; sublevel shown below while sliding
+                          ],
+                        ),
+                      ),
+                      const SizedBox(height: 2),
+                      // Bottom staggered level labels (second row)
+                      SizedBox(
+                        height: 18,
+                        child: LayoutBuilder(
+                          builder: (context, box) {
+                            const names = [
+                              '',
+                              'Int-G',
+                              'Level G-F',
+                              'Level F-E',
+                              'Level E-D',
+                              'Level D-Open',
+                              '',
+                            ];
+                            Widget labelAt(int idx) => Expanded(
+                              child: Center(
+                                child: Text(
+                                  names[idx],
+                                  textAlign: TextAlign.center,
+                                  style: const TextStyle(
+                                    fontSize: 11,
+                                    color: Colors.black54,
+                                  ),
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                              ),
+                            );
 
-                      return Column(children: [
-                        Expanded(
-                          child: Row(children: List.generate(names.length, (i) => i.isEven ? labelAt(i) : const Expanded(child: SizedBox.shrink()))),
+                            return Row(
+                              children: List.generate(
+                                names.length,
+                                (i) => i.isOdd
+                                    ? labelAt(i)
+                                    : const Expanded(child: SizedBox.shrink()),
+                              ),
+                            );
+                          },
                         ),
-                        Expanded(
-                          child: Row(children: List.generate(names.length, (i) => i.isOdd ? labelAt(i) : const Expanded(child: SizedBox.shrink()))),
-                        ),
-                      ]);
-                    }),
+                      ),
+                      // always show combined level/sublevel on From/To
+                      Text(
+                        'From: ${_label(_start)}/${_subLabel(_start)} • To: ${_label(_end)}/${_subLabel(_end)}',
+                      ),
+                    ],
                   ),
-
-                  // always show combined level/sublevel on From/To
-                  Text('From: ${_label(_start)}/${_subLabel(_start)}'),
-                  Text('To: ${_label(_end)}/${_subLabel(_end)}'),
-                ],
-              ),
+                ),
+                const SizedBox(height: 12),
+                Row(
+                  children: [
+                    Expanded(
+                      child: OutlinedButton(
+                        onPressed: () => Navigator.pop(context),
+                        child: const Text('Cancel'),
+                      ),
+                    ),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: ElevatedButton(
+                        onPressed: _update,
+                        child: const Text('Update'),
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 12),
+                ElevatedButton(
+                  style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
+                  onPressed: _delete,
+                  child: const Text('Delete'),
+                ),
+              ],
             ),
-            const SizedBox(height: 12),
-            Row(children: [Expanded(child: OutlinedButton(onPressed: () => Navigator.pop(context), child: const Text('Cancel'))), const SizedBox(width: 12), Expanded(child: ElevatedButton(onPressed: _update, child: const Text('Update')))]),
-            const SizedBox(height: 12),
-            ElevatedButton(style: ElevatedButton.styleFrom(backgroundColor: Colors.red), onPressed: _delete, child: const Text('Delete'))
-            ]),
           ),
         ),
       ),
     );
   }
 
-
-  String _label(int value){
-    const names = ['Beginners','Intermediate','Level G','Level F','Level E','Level D','Open Player'];
-    final idx = (value~/3).clamp(0,names.length-1);
+  String _label(int value) {
+    const names = [
+      'Beginners',
+      'Intermediate',
+      'Level G',
+      'Level F',
+      'Level E',
+      'Level D',
+      'Open Player',
+    ];
+    final idx = (value ~/ 3).clamp(0, names.length - 1);
     return names[idx];
-  }
-
-  String _groupLabel(int mid) {
-    const names = ['Beginners','Intermediate','Level G','Level F','Level E','Level D','Open Player'];
-    final level = (mid ~/ 3).clamp(0, names.length - 1);
-    final pos = mid % 3;
-    final sub = pos == 0 ? 'Weak' : (pos == 1 ? 'Mid' : 'Strong');
-    return '${names[level]} - $sub';
   }
 
   String _subLabel(int mid) {
@@ -353,13 +429,14 @@ class _EditPlayerScreenState extends State<EditPlayerScreen> {
               height: 1.4,
             ),
             decoration: InputDecoration(
-              prefixIcon: Icon(
-                icon,
-                color: Colors.blue,
-                size: 20,
-              ),
+              prefixIcon: Icon(icon, color: Colors.blue, size: 20),
               border: InputBorder.none,
-              contentPadding: const EdgeInsets.only(left: 56, right: 16, bottom: 16, top: 8),
+              contentPadding: const EdgeInsets.only(
+                left: 56,
+                right: 16,
+                bottom: 16,
+                top: 8,
+              ),
               hintStyle: const TextStyle(color: Colors.grey),
             ),
           ),
@@ -368,29 +445,3 @@ class _EditPlayerScreenState extends State<EditPlayerScreen> {
     );
   }
 }
-
-class _EditTicksPainter extends CustomPainter {
-  final int totalTicks;
-  const _EditTicksPainter({this.totalTicks = 21});
-  @override
-  void paint(Canvas canvas, Size size) {
-    final paint = Paint()..color = Colors.grey..strokeWidth = 1;
-  const ticksPerLevel = 3;
-
-    // Match RangeSlider horizontal padding (8.0) so ticks line up with the track.
-    const horizontalPadding = 8.0;
-    final paddedWidth = (size.width - horizontalPadding * 2).clamp(0.0, size.width);
-
-    for (int i = 0; i < totalTicks; i++) {
-      final dx = horizontalPadding + (i / (totalTicks - 1)) * paddedWidth;
-      final posInGroup = i % ticksPerLevel; // 0..2
-      final startY = size.height * (posInGroup == 0 ? 0.55 : (posInGroup == 1 ? 0.45 : 0.32));
-      final endY = size.height * 0.55;
-      canvas.drawLine(Offset(dx, startY), Offset(dx, endY), paint);
-    }
-  }
-
-  @override
-  bool shouldRepaint(covariant CustomPainter old) => false;
-}
-// removed tick overlay painter; leaving default RangeSlider appearance
