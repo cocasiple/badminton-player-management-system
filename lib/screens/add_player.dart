@@ -73,7 +73,7 @@ class _AddPlayerScreenState extends State<AddPlayerScreen> {
       ),
       body: SingleChildScrollView(
         child: Padding(
-          padding: const EdgeInsets.all(16.0),
+          padding: const EdgeInsets.all(12.0),
           child: Form(
             key: _formKey,
             child: Column(
@@ -86,7 +86,7 @@ class _AddPlayerScreenState extends State<AddPlayerScreen> {
                   validator: (v) =>
                       (v == null || v.trim().isEmpty) ? 'Required' : null,
                 ),
-                const SizedBox(height: 16),
+                const SizedBox(height: 10),
                 _buildInputField(
                   controller: _full,
                   label: 'FULL NAME',
@@ -94,7 +94,7 @@ class _AddPlayerScreenState extends State<AddPlayerScreen> {
                   validator: (v) =>
                       (v == null || v.trim().isEmpty) ? 'Required' : null,
                 ),
-                const SizedBox(height: 16),
+                const SizedBox(height: 10),
                 _buildInputField(
                   controller: _contact,
                   label: 'MOBILE NUMBER',
@@ -107,7 +107,7 @@ class _AddPlayerScreenState extends State<AddPlayerScreen> {
                         : 'Numbers only';
                   },
                 ),
-                const SizedBox(height: 16),
+                const SizedBox(height: 10),
                 _buildInputField(
                   controller: _email,
                   label: 'EMAIL ADDRESS',
@@ -122,54 +122,54 @@ class _AddPlayerScreenState extends State<AddPlayerScreen> {
                         : 'Invalid email';
                   },
                 ),
-                const SizedBox(height: 16),
+                const SizedBox(height: 10),
                 _buildInputField(
                   controller: _address,
                   label: 'HOME ADDRESS',
                   icon: Icons.location_on,
                   maxLines: null,
                 ),
-                const SizedBox(height: 16),
+                const SizedBox(height: 10),
                 _buildInputField(
                   controller: _remarks,
                   label: 'REMARKS',
                   icon: Icons.book,
                   maxLines: null,
                 ),
-                const SizedBox(height: 20),
+                const SizedBox(height: 12),
                 Container(
                   decoration: BoxDecoration(
                     color: Colors.white,
-                    borderRadius: BorderRadius.circular(12),
+                    borderRadius: BorderRadius.circular(8),
                     boxShadow: [
                       BoxShadow(
                         color: Colors.grey.withValues(alpha: 0.1),
                         spreadRadius: 1,
-                        blurRadius: 3,
+                        blurRadius: 2,
                         offset: const Offset(0, 1),
                       ),
                     ],
                   ),
-                  padding: const EdgeInsets.all(20),
+                  padding: const EdgeInsets.all(12),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Row(
                         children: [
-                          Icon(Icons.trending_up, color: Colors.blue, size: 20),
-                          const SizedBox(width: 8),
+                          Icon(Icons.trending_up, color: Colors.blue, size: 16),
+                          const SizedBox(width: 6),
                           const Text(
                             'BADMINTON LEVEL RANGE',
                             style: TextStyle(
-                              fontSize: 12,
+                              fontSize: 11,
                               color: Colors.grey,
                               fontWeight: FontWeight.w600,
-                              letterSpacing: 1.0,
+                              letterSpacing: 0.5,
                             ),
                           ),
                         ],
                       ),
-                      const SizedBox(height: 20),
+                      const SizedBox(height: 8),
                       RangeSlider(
                         values: RangeValues(
                           _start.toDouble(),
@@ -196,87 +196,38 @@ class _AddPlayerScreenState extends State<AddPlayerScreen> {
                           });
                         },
                       ),
-                      const SizedBox(height: 16),
+                      const SizedBox(height: 4),
                       // Level labels
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Text(
-                            'Beginners',
-                            style: TextStyle(
-                              fontSize: 10,
-                              color: Colors.blue.shade600,
-                              fontWeight: FontWeight.w500,
-                            ),
-                          ),
-                          Text(
-                            'Intermediate',
-                            style: TextStyle(
-                              fontSize: 10,
-                              color: Colors.blue.shade600,
-                              fontWeight: FontWeight.w500,
-                            ),
-                          ),
-                          Text(
-                            'Level G',
-                            style: TextStyle(
-                              fontSize: 10,
-                              color: Colors.blue.shade600,
-                              fontWeight: FontWeight.w500,
-                            ),
-                          ),
-                          Text(
-                            'Level F',
-                            style: TextStyle(
-                              fontSize: 10,
-                              color: Colors.blue.shade600,
-                              fontWeight: FontWeight.w500,
-                            ),
-                          ),
-                          Text(
-                            'Level E',
-                            style: TextStyle(
-                              fontSize: 10,
-                              color: Colors.blue.shade600,
-                              fontWeight: FontWeight.w500,
-                            ),
-                          ),
-                          Text(
-                            'Level D',
-                            style: TextStyle(
-                              fontSize: 10,
-                              color: Colors.blue.shade600,
-                              fontWeight: FontWeight.w500,
-                            ),
-                          ),
-                          Text(
-                            'Open',
-                            style: TextStyle(
-                              fontSize: 10,
-                              color: Colors.blue.shade600,
-                              fontWeight: FontWeight.w500,
-                            ),
-                          ),
+                          Text('Beginners', style: TextStyle(fontSize: 8, color: Colors.blue.shade600)),
+                          Text('Intermediate', style: TextStyle(fontSize: 8, color: Colors.blue.shade600)),
+                          Text('Level G', style: TextStyle(fontSize: 8, color: Colors.blue.shade600)),
+                          Text('Level F', style: TextStyle(fontSize: 8, color: Colors.blue.shade600)),
+                          Text('Level E', style: TextStyle(fontSize: 8, color: Colors.blue.shade600)),
+                          Text('Level D', style: TextStyle(fontSize: 8, color: Colors.blue.shade600)),
+                          Text('Open', style: TextStyle(fontSize: 8, color: Colors.blue.shade600)),
                         ],
                       ),
-                      const SizedBox(height: 16),
+                      const SizedBox(height: 8),
                       // Current selection display
                       Container(
-                        padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 12),
+                        padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 8),
                         decoration: BoxDecoration(
                           color: Colors.blue.shade50,
-                          borderRadius: BorderRadius.circular(8),
+                          borderRadius: BorderRadius.circular(6),
                           border: Border.all(color: Colors.blue.shade200),
                         ),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            Icon(Icons.sports_tennis, color: Colors.blue.shade700, size: 16),
-                            const SizedBox(width: 8),
+                            Icon(Icons.sports_tennis, color: Colors.blue.shade700, size: 12),
+                            const SizedBox(width: 6),
                             Text(
                               'From: ${_label(_start)}/${_subLabel(_start)} • To: ${_label(_end)}/${_subLabel(_end)}',
                               style: TextStyle(
-                                fontSize: 12,
+                                fontSize: 10,
                                 fontWeight: FontWeight.w600,
                                 color: Colors.blue.shade700,
                               ),
@@ -287,46 +238,46 @@ class _AddPlayerScreenState extends State<AddPlayerScreen> {
                     ],
                   ),
                 ),
-                const SizedBox(height: 20),
+                const SizedBox(height: 12),
                 Row(
                   children: [
                     Expanded(
                       child: OutlinedButton(
                         onPressed: () => Navigator.pop(context),
                         style: OutlinedButton.styleFrom(
-                          padding: const EdgeInsets.symmetric(vertical: 16),
+                          padding: const EdgeInsets.symmetric(vertical: 12),
                           side: const BorderSide(color: Colors.grey, width: 1.5),
                           shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(12),
+                            borderRadius: BorderRadius.circular(8),
                           ),
                         ),
                         child: const Text(
                           'Cancel',
                           style: TextStyle(
-                            fontSize: 16,
+                            fontSize: 14,
                             fontWeight: FontWeight.w600,
                             color: Colors.grey,
                           ),
                         ),
                       ),
                     ),
-                    const SizedBox(width: 12),
+                    const SizedBox(width: 10),
                     Expanded(
                       child: ElevatedButton(
                         onPressed: _save,
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Colors.blue,
                           foregroundColor: Colors.white,
-                          padding: const EdgeInsets.symmetric(vertical: 16),
+                          padding: const EdgeInsets.symmetric(vertical: 12),
                           shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(12),
+                            borderRadius: BorderRadius.circular(8),
                           ),
                           elevation: 2,
                         ),
                         child: const Text(
                           'Save Player',
                           style: TextStyle(
-                            fontSize: 16,
+                            fontSize: 14,
                             fontWeight: FontWeight.w600,
                           ),
                         ),
@@ -334,6 +285,7 @@ class _AddPlayerScreenState extends State<AddPlayerScreen> {
                     ),
                   ],
                 ),
+                const SizedBox(height: 8),
               ],
             ),
           ),
@@ -372,58 +324,50 @@ class _AddPlayerScreenState extends State<AddPlayerScreen> {
     return Container(
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(8),
+        borderRadius: BorderRadius.circular(6),
         boxShadow: [
           BoxShadow(
             color: Colors.grey.withValues(alpha: 0.1),
-            spreadRadius: 1,
-            blurRadius: 3,
+            spreadRadius: 0.5,
+            blurRadius: 2,
             offset: const Offset(0, 1),
           ),
         ],
       ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Padding(
-            padding: const EdgeInsets.only(left: 16, top: 12, right: 16),
-            child: Text(
-              label,
-              style: const TextStyle(
-                fontSize: 12,
-                color: Colors.grey,
-                fontWeight: FontWeight.w600,
-                letterSpacing: 1.0,
-                fontFamily: 'Roboto',
-              ),
-            ),
+      child: TextFormField(
+        controller: controller,
+        validator: validator,
+        keyboardType: keyboardType,
+        maxLines: maxLines,
+        minLines: 1,
+        style: const TextStyle(
+          fontSize: 14,
+          fontWeight: FontWeight.w500,
+          letterSpacing: 0.2,
+          height: 1.3,
+        ),
+        decoration: InputDecoration(
+          labelText: label,
+          labelStyle: const TextStyle(
+            fontSize: 10,
+            color: Colors.grey,
+            fontWeight: FontWeight.w600,
+            letterSpacing: 0.5,
           ),
-          TextFormField(
-            controller: controller,
-            validator: validator,
-            keyboardType: keyboardType,
-            maxLines: maxLines,
-            minLines: 1,
-            style: const TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.w500,
-              letterSpacing: 0.3,
-              fontFamily: 'Roboto',
-              height: 1.4,
-            ),
-            decoration: InputDecoration(
-              prefixIcon: Icon(icon, color: Colors.blue, size: 20),
-              border: InputBorder.none,
-              contentPadding: const EdgeInsets.only(
-                left: 56,
-                right: 16,
-                bottom: 16,
-                top: 8,
-              ),
-              hintStyle: const TextStyle(color: Colors.grey),
-            ),
+          floatingLabelStyle: const TextStyle(
+            fontSize: 10,
+            color: Colors.blue,
+            fontWeight: FontWeight.w600,
+            letterSpacing: 0.5,
           ),
-        ],
+          prefixIcon: Icon(icon, color: Colors.blue, size: 18),
+          border: InputBorder.none,
+          contentPadding: const EdgeInsets.symmetric(
+            horizontal: 12,
+            vertical: 12,
+          ),
+          hintStyle: const TextStyle(color: Colors.grey),
+        ),
       ),
     );
   }
