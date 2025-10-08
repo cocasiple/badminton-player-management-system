@@ -19,7 +19,6 @@ class _AddPlayerScreenState extends State<AddPlayerScreen> {
 
   int _start = 0;
   int _end = 2;
-  bool _isSliding = false;
 
   @override
   void dispose() {
@@ -138,167 +137,199 @@ class _AddPlayerScreenState extends State<AddPlayerScreen> {
                   maxLines: null,
                 ),
                 const SizedBox(height: 20),
-                const Padding(
-                  padding: EdgeInsets.only(left: 4, bottom: 8),
-                  child: Text(
-                    'LEVEL',
-                    style: TextStyle(
-                      fontSize: 12,
-                      color: Colors.grey,
-                      fontWeight: FontWeight.w600,
-                      letterSpacing: 1.0,
-                    ),
-                  ),
-                ),
-                SizedBox(
-                  height: 120,
-                  child: Column(
-                    children: [
-                      // Top staggered level labels (first row)
-                      SizedBox(
-                        height: 18,
-                        child: LayoutBuilder(
-                          builder: (context, box) {
-                            const names = [
-                              'Beginners',
-                              'Intermediate',
-                              'Level G',
-                              'Level F',
-                              'Level E',
-                              'Level D',
-                              'Open Player',
-                            ];
-                            Widget labelAt(int idx) => Expanded(
-                              child: Center(
-                                child: Text(
-                                  names[idx],
-                                  textAlign: TextAlign.center,
-                                  style: const TextStyle(
-                                    fontSize: 11,
-                                    color: Colors.black54,
-                                  ),
-                                  overflow: TextOverflow.ellipsis,
-                                ),
-                              ),
-                            );
-
-                            return Row(
-                              children: List.generate(
-                                names.length,
-                                (i) => i.isEven
-                                    ? labelAt(i)
-                                    : const Expanded(child: SizedBox.shrink()),
-                              ),
-                            );
-                          },
-                        ),
+                Container(
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(12),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.grey.withValues(alpha: 0.1),
+                        spreadRadius: 1,
+                        blurRadius: 3,
+                        offset: const Offset(0, 1),
                       ),
-                      const SizedBox(height: 2),
-                      // RangeSlider in the middle
-                      Expanded(
-                        child: Stack(
+                    ],
+                  ),
+                  padding: const EdgeInsets.all(20),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        children: [
+                          Icon(Icons.trending_up, color: Colors.blue, size: 20),
+                          const SizedBox(width: 8),
+                          const Text(
+                            'BADMINTON LEVEL RANGE',
+                            style: TextStyle(
+                              fontSize: 12,
+                              color: Colors.grey,
+                              fontWeight: FontWeight.w600,
+                              letterSpacing: 1.0,
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 20),
+                      RangeSlider(
+                        values: RangeValues(
+                          _start.toDouble(),
+                          _end.toDouble(),
+                        ),
+                        min: 0,
+                        max: (totalTicks - 1).toDouble(),
+                        divisions: totalTicks - 1,
+                        labels: RangeLabels(
+                          '${_label(_start)} (${_subLabel(_start)})',
+                          '${_label(_end)} (${_subLabel(_end)})',
+                        ),
+                        activeColor: Colors.blue.shade600,
+                        inactiveColor: Colors.blue.withValues(alpha: 0.3),
+                        onChanged: (r) {
+                          setState(() {
+                            _start = r.start.round();
+                            _end = r.end.round();
+                            if (_start > _end) {
+                              final t = _start;
+                              _start = _end;
+                              _end = t;
+                            }
+                          });
+                        },
+                      ),
+                      const SizedBox(height: 16),
+                      // Level labels
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            'Beginners',
+                            style: TextStyle(
+                              fontSize: 10,
+                              color: Colors.blue.shade600,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                          Text(
+                            'Intermediate',
+                            style: TextStyle(
+                              fontSize: 10,
+                              color: Colors.blue.shade600,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                          Text(
+                            'Level G',
+                            style: TextStyle(
+                              fontSize: 10,
+                              color: Colors.blue.shade600,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                          Text(
+                            'Level F',
+                            style: TextStyle(
+                              fontSize: 10,
+                              color: Colors.blue.shade600,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                          Text(
+                            'Level E',
+                            style: TextStyle(
+                              fontSize: 10,
+                              color: Colors.blue.shade600,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                          Text(
+                            'Level D',
+                            style: TextStyle(
+                              fontSize: 10,
+                              color: Colors.blue.shade600,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                          Text(
+                            'Open',
+                            style: TextStyle(
+                              fontSize: 10,
+                              color: Colors.blue.shade600,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 16),
+                      // Current selection display
+                      Container(
+                        padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 12),
+                        decoration: BoxDecoration(
+                          color: Colors.blue.shade50,
+                          borderRadius: BorderRadius.circular(8),
+                          border: Border.all(color: Colors.blue.shade200),
+                        ),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            Positioned.fill(
-                              child: Padding(
-                                padding: const EdgeInsets.symmetric(
-                                  horizontal: 8.0,
-                                ),
-                                child: RangeSlider(
-                                  values: RangeValues(
-                                    _start.toDouble(),
-                                    _end.toDouble(),
-                                  ),
-                                  min: 0,
-                                  max: (totalTicks - 1).toDouble(),
-                                  divisions: totalTicks - 1,
-                                  labels: RangeLabels(
-                                    _label(_start),
-                                    _label(_end),
-                                  ),
-                                  activeColor: Colors.blue,
-                                  inactiveColor: Colors.blue.withOpacity(0.3),
-                                  onChanged: (r) {
-                                    setState(() {
-                                      _start = r.start.round();
-                                      _end = r.end.round();
-                                      if (_start > _end) {
-                                        final t = _start;
-                                        _start = _end;
-                                        _end = t;
-                                      }
-                                    });
-                                  },
-                                  onChangeStart: (_) =>
-                                      setState(() => _isSliding = true),
-                                  onChangeEnd: (_) =>
-                                      setState(() => _isSliding = false),
-                                ),
+                            Icon(Icons.sports_tennis, color: Colors.blue.shade700, size: 16),
+                            const SizedBox(width: 8),
+                            Text(
+                              'From: ${_label(_start)}/${_subLabel(_start)} • To: ${_label(_end)}/${_subLabel(_end)}',
+                              style: TextStyle(
+                                fontSize: 12,
+                                fontWeight: FontWeight.w600,
+                                color: Colors.blue.shade700,
                               ),
                             ),
                           ],
                         ),
                       ),
-                      const SizedBox(height: 2),
-                      // Bottom staggered level labels (second row)
-                      SizedBox(
-                        height: 18,
-                        child: LayoutBuilder(
-                          builder: (context, box) {
-                            const names = [
-                              'Beginners',
-                              'Intermediate',
-                              'Level G',
-                              'Level F',
-                              'Level E',
-                              'Level D',
-                              'Open Player',
-                            ];
-                            Widget labelAt(int idx) => Expanded(
-                              child: Center(
-                                child: Text(
-                                  names[idx],
-                                  textAlign: TextAlign.center,
-                                  style: const TextStyle(
-                                    fontSize: 11,
-                                    color: Colors.black54,
-                                  ),
-                                  overflow: TextOverflow.ellipsis,
-                                ),
-                              ),
-                            );
-
-                            return Row(
-                              children: List.generate(
-                                names.length,
-                                (i) => i.isOdd
-                                    ? labelAt(i)
-                                    : const Expanded(child: SizedBox.shrink()),
-                              ),
-                            );
-                          },
-                        ),
-                      ),
-                      // always show combined level/sublevel on From/To
-                      Text(
-                        'From: ${_label(_start)}/${_subLabel(_start)} • To: ${_label(_end)}/${_subLabel(_end)}',
-                      ),
                     ],
                   ),
                 ),
-                const SizedBox(height: 12),
+                const SizedBox(height: 20),
                 Row(
                   children: [
                     Expanded(
                       child: OutlinedButton(
                         onPressed: () => Navigator.pop(context),
-                        child: const Text('Cancel'),
+                        style: OutlinedButton.styleFrom(
+                          padding: const EdgeInsets.symmetric(vertical: 16),
+                          side: const BorderSide(color: Colors.grey, width: 1.5),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                        ),
+                        child: const Text(
+                          'Cancel',
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w600,
+                            color: Colors.grey,
+                          ),
+                        ),
                       ),
                     ),
                     const SizedBox(width: 12),
                     Expanded(
                       child: ElevatedButton(
                         onPressed: _save,
-                        child: const Text('Save Player'),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.blue,
+                          foregroundColor: Colors.white,
+                          padding: const EdgeInsets.symmetric(vertical: 16),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          elevation: 2,
+                        ),
+                        child: const Text(
+                          'Save Player',
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
                       ),
                     ),
                   ],
@@ -344,7 +375,7 @@ class _AddPlayerScreenState extends State<AddPlayerScreen> {
         borderRadius: BorderRadius.circular(8),
         boxShadow: [
           BoxShadow(
-            color: Colors.grey.withOpacity(0.1),
+            color: Colors.grey.withValues(alpha: 0.1),
             spreadRadius: 1,
             blurRadius: 3,
             offset: const Offset(0, 1),
