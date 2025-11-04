@@ -44,4 +44,32 @@ class Player {
       levelEnd: levelEnd ?? this.levelEnd,
     );
   }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'nickname': nickname,
+      'fullName': fullName,
+      'contact': contact,
+      'email': email,
+      'address': address,
+      'remarks': remarks,
+      'levelStart': levelStart,
+      'levelEnd': levelEnd,
+    };
+  }
+
+  factory Player.fromJson(Map<String, dynamic> json) {
+    return Player(
+      id: json['id'] as String,
+      nickname: json['nickname'] as String,
+      fullName: json['fullName'] as String,
+      contact: json['contact'] as String,
+      email: json['email'] as String,
+      address: json['address'] as String,
+      remarks: json['remarks'] as String,
+      levelStart: json['levelStart'] as int,
+      levelEnd: json['levelEnd'] as int,
+    );
+  }
 }

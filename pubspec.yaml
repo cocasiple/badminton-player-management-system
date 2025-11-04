@@ -35,6 +35,7 @@ dependencies:
   path_provider: ^2.0.14
   provider: ^6.0.5
   path: ^1.8.3
+  shared_preferences: ^2.2.2
 
 dev_dependencies:
   flutter_test:
